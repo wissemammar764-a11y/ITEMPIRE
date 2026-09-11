@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-MODEL_NAME = "gemini-flash-latest"
+MODEL_NAME = "gemini-3.6-flash"
 
 DB_HOST = "127.0.0.1"
 DB_PORT = "5432"

@@ -20,7 +20,7 @@ import { factory } from 'typescript';
     port: 5432,
     username: "postgres",
     password: "123456789",
-    database: "ITEMMPIRE",
+    database: "ITEMPIRE",
     autoLoadEntities: true,
     entities: [__dirname + "/**/*.entity{.ts,.js}"],
     synchronize: false,  

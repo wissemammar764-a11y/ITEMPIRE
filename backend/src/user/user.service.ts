@@ -36,14 +36,16 @@ export class UserService {
     return `This action updates a #${id} user`;
   }
 
-  remove(id_user: number) {
-    const user = this.userRepository.findOne({ where: { id_user } });
-    if (!user) {
-      throw new Error(`User with id ${id_user} not found`);
-    }
-    else {
-      this.userRepository.delete(id_user);
-    }
-    return `user deleted successfully`;
+  async remove(id_user: number) {
+  const user = await this.userRepository.findOne({
+    where: { id_user },
+  });
+
+  if (!user) {
+    throw new Error(`User with id ${id_user} not found`);
   }
-}
+
+  await this.userRepository.delete(id_user);
+
+  return `user deleted successfully`;
+}}

@@ -18,17 +18,43 @@ export class StudentsService {
     return this.studentRepository.save(student);
   }
 
-  findAll() {
-    return this.studentRepository.find();
-  }
+  async findAll() {
 
-  findOne(id: number) {
-    return this.studentRepository.findOne({
-      where: {
-        student_id: id,
-      },
-    });
-  }
+  return this.studentRepository.query(`
+    SELECT
+      s.student_id,
+      u.first_name AS prenom,
+      u.last_name AS nom,
+      u.email,
+      u.phone AS telephone,
+      s.education_level AS niveau
+    FROM students s
+    INNER JOIN users u
+      ON s.user_id = u.user_id
+    ORDER BY s.student_id;
+  `);
+}
+
+  async findOne(id: number) {
+  const result = await this.studentRepository.query(
+    `
+    SELECT
+      s.student_id,
+      u.first_name AS prenom,
+      u.last_name AS nom,
+      u.email,
+      u.phone AS telephone,
+      s.education_level AS niveau
+    FROM students s
+    INNER JOIN users u
+      ON s.user_id = u.user_id
+    WHERE s.student_id = $1;
+    `,
+    [id],
+  );
+
+  return result[0] || null;
+}
 
   update(id: number, updateStudentDto: UpdateStudentDto) {
     return this.studentRepository.update(
