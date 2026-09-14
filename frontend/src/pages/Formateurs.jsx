@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { getTrainers, createTrainer } from '../services/trainerService'
 
 const Formateurs = () => {
   const [formateurs, setFormateurs] = useState([])
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+
   const [form, setForm] = useState({
     nom: '',
     prenom: '',
@@ -11,16 +15,43 @@ const Formateurs = () => {
     email: '',
   })
 
+  const loadTrainers = async () => {
+    try {
+      const data = await getTrainers()
+      setFormateurs(data)
+    } catch (error) {
+      console.error("Erreur lors du chargement des formateurs :", error)
+    }
+  }
+
+  useEffect(() => {
+    loadTrainers()
+  }, [])
+
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    if (Object.values(form).some((value) => !value.trim())) return
+    if (Object.values(form).some((value) => !value.trim()) || submitting) return
 
-    setFormateurs([...formateurs, { ...form, id: Date.now() }])
-    setForm({ nom: '', prenom: '', cin: '', telephone: '', specialite: '', email: '' })
+    setSubmitting(true)
+    setError('')
+
+    try {
+      await createTrainer(form)
+      await loadTrainers()
+      setForm({ nom: '', prenom: '', cin: '', telephone: '', specialite: '', email: '' })
+    } catch (err) {
+      console.error("Erreur lors de la création du formateur :", err)
+      setError(
+        err.response?.data?.message ||
+          "Impossible d'ajouter le formateur. Vérifiez que NestJS est lancé sur le port 3002."
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -47,7 +78,16 @@ const Formateurs = () => {
           <div className="field"><label htmlFor="formateur-specialite">Spécialité</label><input id="formateur-specialite" name="specialite" type="text" placeholder="Développement Web" value={form.specialite} onChange={handleChange} required /></div>
           <div className="field"><label htmlFor="formateur-email">Email</label><input id="formateur-email" name="email" type="email" placeholder="amine@exemple.com" value={form.email} onChange={handleChange} required /></div>
         </div>
-        <div className="btn-row"><button className="btn" type="submit">Ajouter le formateur</button></div>
+        {error && (
+          <div style={{ color: '#DC2626', fontSize: '14px', marginTop: '8px' }}>
+            {error}
+          </div>
+        )}
+        <div className="btn-row">
+          <button className="btn" type="submit" disabled={submitting}>
+            {submitting ? 'Ajout en cours...' : 'Ajouter le formateur'}
+          </button>
+        </div>
       </form>
       <div className="panel">
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16 }}>
@@ -67,7 +107,7 @@ const Formateurs = () => {
         </div>
         : <table className="data-table">
           <thead><tr><th>Nom complet</th><th>CIN</th><th>Téléphone</th><th>Spécialité</th><th>Email</th></tr></thead>
-          <tbody>{formateurs.map((formateur) => <tr key={formateur.id}>
+          <tbody>{formateurs.map((formateur) => <tr key={formateur.trainer_id}>
             <td>{formateur.prenom} {formateur.nom}</td>
             <td>{formateur.cin}</td>
             <td>{formateur.telephone}</td>

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TrainersService } from './trainers.service';
 import { CreateTrainerDto } from './dto/create-trainer.dto';
 import { UpdateTrainerDto } from './dto/update-trainer.dto';
+import { CreateTrainerAccountDto } from './dto/create-trainer-account.dto';
 
 @Controller('trainers')
 export class TrainersController {
@@ -10,6 +11,12 @@ export class TrainersController {
   @Post()
   create(@Body() createTrainerDto: CreateTrainerDto) {
     return this.trainersService.create(createTrainerDto);
+  }
+
+  // Crée un utilisateur + un formateur en une seule requête
+  @Post('account')
+  createAccount(@Body() createTrainerAccountDto: CreateTrainerAccountDto) {
+    return this.trainersService.createTrainerAccount(createTrainerAccountDto);
   }
 
   @Get()
