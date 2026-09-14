@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { IsNotEmpty, IsString, IsBoolean, MaxLength } from "class-validator";
 
 export class CreateUserDto {
     @ApiProperty({ description: 'The first name of the user', maxLength: 20 })
@@ -32,10 +32,9 @@ export class CreateUserDto {
     @IsString()
     @MaxLength(20)
     role!: string;
-    @ApiProperty({ description: 'The status of the user', maxLength: 20 })
-    @IsString()
-    @MaxLength(20)
-    status!: string;
+    @ApiProperty({ description: 'The status of the user' })
+    @IsBoolean()
+    status!: boolean;
     @ApiProperty({ description: 'The creation date of the user' })
     @IsNotEmpty()
     created_at!: Date;

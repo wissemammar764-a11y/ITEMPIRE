@@ -6,8 +6,6 @@ from AI.gemini import ask_gemini
 
 router = APIRouter()
 
-system_prompt = build_system_prompt()
-
 @router.get("/")
 def home():
     return {
@@ -18,6 +16,10 @@ def home():
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
     try:
+        # Reconstruit le prompt à chaque requête pour refléter l'état
+        # actuel de la base (sinon les données restent figées au démarrage
+        # du serveur et ne reflètent jamais les derniers ajouts/modifs).
+        system_prompt = build_system_prompt()
         response = ask_gemini(system_prompt, request.question)
     except Exception as error:
         print(f"Gemini API error: {error}")

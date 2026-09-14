@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { getStudents } from '../services/studentService'
+import { getStudents, createStudent } from '../services/studentService'
 
 const Etudiants = () => {
   const [students, setStudents] = useState([])
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
   const [form, setForm] = useState({
     nom: '',
@@ -13,31 +15,45 @@ const Etudiants = () => {
     niveau: 'Licence',
   })
 
-  useEffect(() => {
-    const loadStudents = async () => {
-      try {
-        const data = await getStudents()
-        console.log("Étudiants reçus depuis NestJS :", data)
-        setStudents(data)
-      } catch (error) {
-        console.error("Erreur lors du chargement des étudiants :", error)
-      }
+  const loadStudents = async () => {
+    try {
+      const data = await getStudents()
+      console.log("Étudiants reçus depuis NestJS :", data)
+      setStudents(data)
+    } catch (error) {
+      console.error("Erreur lors du chargement des étudiants :", error)
     }
+  }
 
+  useEffect(() => {
     loadStudents()
   }, [])
 
-  // ...
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    if (!form.nom.trim() || !form.prenom.trim()) return
+    if (!form.nom.trim() || !form.prenom.trim() || submitting) return
 
-    setStudents([...students, { ...form, id: Date.now() }])
-    setForm({ nom: '', prenom: '', email: '', telephone: '', cin: '', niveau: 'Licence' })
+    setSubmitting(true)
+    setError('')
+
+    try {
+      await createStudent(form)
+      // On recharge depuis le backend pour avoir les données réelles (id, jointures...)
+      await loadStudents()
+      setForm({ nom: '', prenom: '', email: '', telephone: '', cin: '', niveau: 'Licence' })
+    } catch (err) {
+      console.error("Erreur lors de la création de l'étudiant :", err)
+      setError(
+        err.response?.data?.message ||
+          "Impossible d'ajouter l'étudiant. Vérifiez que NestJS est lancé sur le port 3002."
+      )
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -54,7 +70,16 @@ const Etudiants = () => {
             <select id="niveau" name="niveau" value={form.niveau} onChange={handleChange}><option>Licence</option><option>Master</option><option>Ingénieur</option></select>
           </div>
         </div>
-        <div className="btn-row"><button className="btn" type="submit">Ajouter l'étudiant</button></div>
+        {error && (
+          <div style={{ color: '#DC2626', fontSize: '14px', marginTop: '8px' }}>
+            {error}
+          </div>
+        )}
+        <div className="btn-row">
+          <button className="btn" type="submit" disabled={submitting}>
+            {submitting ? 'Ajout en cours...' : "Ajouter l'étudiant"}
+          </button>
+        </div>
       </form>
   <div className="panel table-card">
         <h3>Liste des étudiants</h3>
@@ -73,7 +98,7 @@ const Etudiants = () => {
             <thead><tr><th>Nom complet</th><th>Email</th><th>Téléphone</th><th>Niveau</th></tr></thead>
             <tbody>
               {students.map((student) => (
-                <tr key={student.id}>
+                <tr key={student.student_id}>
                   <td>{student.prenom} {student.nom}</td>
                   <td>{student.email || '-'}</td>
                   <td>{student.telephone || '-'}</td>

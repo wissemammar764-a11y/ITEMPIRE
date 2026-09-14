@@ -1,9 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('user')
+// La vraie table métier est "users" (pluriel) — c'est elle que référencent
+// les clés étrangères de students/enrollments/etc. et qui contient les
+// comptes seedés (STUDENT/TRAINER/RH/ADMIN). La table "user" (singulier)
+// était une table parallèle non reliée au reste du schéma.
+@Entity('users')
 export class User {
 
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'user_id' })
   id_user!: number;
 
   @Column()
@@ -25,7 +29,7 @@ export class User {
   role!: string;
 
   @Column()
-  status!: string;
+  status!: boolean;
 
   @Column()
   created_at!: Date;

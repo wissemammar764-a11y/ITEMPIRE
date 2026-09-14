@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
+import { CreateStudentAccountDto } from './dto/create-student-account.dto';
 
 @Controller('students')
 export class StudentsController {
@@ -10,6 +11,13 @@ export class StudentsController {
   @Post()
   create(@Body() createStudentDto: CreateStudentDto) {
     return this.studentsService.create(createStudentDto);
+  }
+
+  // Crée un utilisateur + un étudiant en une seule requête
+  // (utilisé par le formulaire "Ajouter un étudiant" du frontend)
+  @Post('account')
+  createAccount(@Body() createStudentAccountDto: CreateStudentAccountDto) {
+    return this.studentsService.createStudentAccount(createStudentAccountDto);
   }
 
   @Get()
