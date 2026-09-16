@@ -1,9 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
-import { randomBytes } from 'crypto';
 
-import { CreateTrainerDto } from './dto/create-trainer.dto';
 import { UpdateTrainerDto } from './dto/update-trainer.dto';
 import { CreateTrainerAccountDto } from './dto/create-trainer-account.dto';
 import { Trainer } from './entities/trainer.entity';
@@ -19,11 +17,6 @@ export class TrainersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  create(createTrainerDto: CreateTrainerDto) {
-    const newTrainer = this.trainerRepository.create(createTrainerDto as any);
-    return this.trainerRepository.save(newTrainer as any);
-  }
-
   // Créer un utilisateur + un formateur (transaction : les deux réussissent
   // ou échouent ensemble, comme pour les étudiants)
   async createTrainerAccount(data: CreateTrainerAccountDto) {
@@ -36,14 +29,12 @@ export class TrainersService {
         throw new ConflictException('Un utilisateur avec cet email existe déjà.');
       }
 
-      const temporaryPasswordHash = randomBytes(16).toString('hex');
-
       const user = manager.create(User, {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
         phone: data.phone,
-        password_hash: temporaryPasswordHash,
+        password_hash: data.password,
         role: 'TRAINER',
         status: true,
         created_at: new Date(),

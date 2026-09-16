@@ -38,6 +38,12 @@ export class CreateStudentAccountDto {
   @MaxLength(20)
   cin!: string;
 
+  @ApiProperty({ example: 'motdepasse123' })
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(50)
+  password!: string;
+
   @ApiPropertyOptional({ example: '2001-03-10' })
   @IsOptional()
   @IsDateString()

@@ -1,7 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { randomBytes } from 'crypto';
 
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
@@ -41,16 +40,15 @@ export class StudentsService {
       }
 
       // Créer l'utilisateur
-      // TODO: remplacer par un vrai hash bcrypt une fois l'authentification en place.
-      // Pour l'instant on génère une valeur temporaire pour respecter la contrainte NOT NULL.
-      const temporaryPasswordHash = randomBytes(16).toString('hex');
-
+      // ⚠️ Mot de passe stocké en clair pour rester cohérent avec les comptes
+      // seedés existants (qui utilisent aussi du texte brut). À sécuriser
+      // avec un vrai hash (bcrypt) avant la mise en production.
       const user = manager.create(User, {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
         phone: data.phone,
-        password_hash: temporaryPasswordHash,
+        password_hash: data.password,
         role: 'STUDENT',
         status: true,
         created_at: new Date(),

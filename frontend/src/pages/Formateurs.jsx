@@ -13,6 +13,7 @@ const Formateurs = () => {
     telephone: '',
     specialite: '',
     email: '',
+    password: '',
   })
 
   const loadTrainers = async () => {
@@ -42,7 +43,7 @@ const Formateurs = () => {
     try {
       await createTrainer(form)
       await loadTrainers()
-      setForm({ nom: '', prenom: '', cin: '', telephone: '', specialite: '', email: '' })
+      setForm({ nom: '', prenom: '', cin: '', telephone: '', specialite: '', email: '', password: '' })
     } catch (err) {
       console.error("Erreur lors de la création du formateur :", err)
       setError(
@@ -77,6 +78,7 @@ const Formateurs = () => {
           <div className="field"><label htmlFor="formateur-telephone">Numéro de téléphone</label><input id="formateur-telephone" name="telephone" type="tel" placeholder="+216 20 000 000" value={form.telephone} onChange={handleChange} required /></div>
           <div className="field"><label htmlFor="formateur-specialite">Spécialité</label><input id="formateur-specialite" name="specialite" type="text" placeholder="Développement Web" value={form.specialite} onChange={handleChange} required /></div>
           <div className="field"><label htmlFor="formateur-email">Email</label><input id="formateur-email" name="email" type="email" placeholder="amine@exemple.com" value={form.email} onChange={handleChange} required /></div>
+          <div className="field"><label htmlFor="formateur-password">Mot de passe</label><input id="formateur-password" name="password" type="password" placeholder="••••••••" value={form.password} onChange={handleChange} required /></div>
         </div>
         {error && (
           <div style={{ color: '#DC2626', fontSize: '14px', marginTop: '8px' }}>

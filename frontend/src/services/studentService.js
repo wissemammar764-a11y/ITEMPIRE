@@ -21,6 +21,7 @@ export const createStudent = async (form) => {
     phone: form.telephone,
     cin: form.cin,
     education_level: form.niveau,
+    password: form.password,
   };
 
   const response = await nestApi.post("/students/account", payload);

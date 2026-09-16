@@ -21,6 +21,7 @@ export const createTrainer = async (form) => {
     phone: form.telephone,
     cin: form.cin,
     speciality: form.specialite,
+    password: form.password,
   };
 
   const response = await nestApi.post("/trainers/account", payload);

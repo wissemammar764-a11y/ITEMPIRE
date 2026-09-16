@@ -13,6 +13,7 @@ const Etudiants = () => {
     telephone: '',
     cin: '',
     niveau: 'Licence',
+    password: '',
   })
 
   const loadStudents = async () => {
@@ -44,7 +45,7 @@ const Etudiants = () => {
       await createStudent(form)
       // On recharge depuis le backend pour avoir les données réelles (id, jointures...)
       await loadStudents()
-      setForm({ nom: '', prenom: '', email: '', telephone: '', cin: '', niveau: 'Licence' })
+      setForm({ nom: '', prenom: '', email: '', telephone: '', cin: '', niveau: 'Licence', password: '' })
     } catch (err) {
       console.error("Erreur lors de la création de l'étudiant :", err)
       setError(
@@ -66,6 +67,7 @@ const Etudiants = () => {
           <div className="field"><label htmlFor="email">Email</label><input id="email" name="email" type="email" placeholder="amine@exemple.com" value={form.email} onChange={handleChange} /></div>
           <div className="field"><label htmlFor="telephone">Téléphone</label><input id="telephone" name="telephone" type="tel" placeholder="+216 20 000 000" value={form.telephone} onChange={handleChange} /></div>
           <div className="field"><label htmlFor="cin">CIN</label><input id="cin" name="cin" type="text" placeholder="12345678" value={form.cin} onChange={handleChange} /></div>
+          <div className="field"><label htmlFor="password">Mot de passe</label><input id="password" name="password" type="password" placeholder="••••••••" value={form.password} onChange={handleChange} /></div>
           <div className="field"><label htmlFor="niveau">Niveau</label>
             <select id="niveau" name="niveau" value={form.niveau} onChange={handleChange}><option>Licence</option><option>Master</option><option>Ingénieur</option></select>
           </div>

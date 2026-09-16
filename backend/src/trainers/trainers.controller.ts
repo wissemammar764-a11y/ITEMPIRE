@@ -1,17 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { TrainersService } from './trainers.service';
-import { CreateTrainerDto } from './dto/create-trainer.dto';
 import { UpdateTrainerDto } from './dto/update-trainer.dto';
 import { CreateTrainerAccountDto } from './dto/create-trainer-account.dto';
 
 @Controller('trainers')
 export class TrainersController {
   constructor(private readonly trainersService: TrainersService) {}
-
-  @Post()
-  create(@Body() createTrainerDto: CreateTrainerDto) {
-    return this.trainersService.create(createTrainerDto);
-  }
 
   // Crée un utilisateur + un formateur en une seule requête
   @Post('account')

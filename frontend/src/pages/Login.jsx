@@ -60,8 +60,8 @@ export default function Login({ onLogin, onRegister }) {
             email: form.email,
             phone: form.telephone,
             password_hash: form.password,
-            role: "user",
-            status: "active",
+            role: "STUDENT",
+            status: "true",
             created_at: new Date().toISOString(),
           },
         );
