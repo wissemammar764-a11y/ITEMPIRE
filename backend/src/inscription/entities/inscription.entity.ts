@@ -1,16 +1,19 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-@Entity()
 
+@Entity('enrollments')
 export class Inscription {
-    @PrimaryGeneratedColumn()
-    id!: number;
-    @Column()
-    id_student!: number;
-    @Column()
-    id_formation!: number;
-    @Column()
-    inscription_date!: Date;
-    @Column()
-    id_session!: number;
-    
+  @PrimaryGeneratedColumn({ name: 'enrollment_id' })
+  enrollment_id!: number;
+
+  @Column()
+  student_id!: number;
+
+  @Column()
+  session_id!: number;
+
+  @Column({ type: 'date', nullable: true })
+  registration_date!: Date;
+
+  @Column({ nullable: true })
+  status!: string;
 }
