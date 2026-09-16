@@ -1,42 +1,37 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateSessionDto {
-    @ApiProperty({ description: 'The formation id of the session', maxLength: 20 })
-    @IsNotEmpty()
-    @MaxLength(20)
-    @IsString()
-    formation_id!: number;
-    @ApiProperty({ description: 'The trainer id of the session', maxLength: 20 })
-    @IsNotEmpty()
-    @IsString()
-    @MaxLength(20)
-    trainer_id!: number;
-    @ApiProperty({ description: 'The room of the session', maxLength: 100 })
-    @IsNotEmpty()
-    @IsString()
-    @MaxLength(100)
-    room!: string;
-    @ApiProperty({ description: 'The mode of the session', maxLength: 100 })
-    @IsNotEmpty()
-    @IsString()
-    @MaxLength(100)
-    mode!: string;
-    @ApiProperty({ description: 'The schedule of the session', maxLength: 200 })
-    @IsNotEmpty()
-    @IsString()
-    @MaxLength(200)
-    schedule!: string;
-    @ApiProperty({ description: 'The start date of the session' })
-    @IsNotEmpty()
-    start_date!: Date;
-    @ApiProperty({ description: 'The end date of the session' })
-    @IsNotEmpty()
-    end_date!: Date;
-    @ApiProperty({ description: 'The status of the session', maxLength: 50 })
-    @IsNotEmpty()
-    @IsString()
-    @MaxLength(50)
-    status!: string;
+  @ApiProperty({ example: 1, description: 'ID de la formation' })
+  @IsNotEmpty()
+  @IsNumber()
+  formation_id!: number;
 
+  @ApiProperty({ example: 1, description: 'ID du formateur' })
+  @IsNotEmpty()
+  @IsNumber()
+  trainer_id!: number;
+
+  @ApiPropertyOptional({ example: 'Salle A1' })
+  @IsOptional()
+  @IsString()
+  room?: string;
+
+  @ApiProperty({ example: 'ONSITE', enum: ['ONLINE', 'ONSITE', 'HYBRID'] })
+  @IsNotEmpty()
+  @IsIn(['ONLINE', 'ONSITE', 'HYBRID'])
+  mode!: string;
+
+  @ApiPropertyOptional({ example: 'Lun/Mer 18h-20h' })
+  @IsOptional()
+  @IsString()
+  schedule?: string;
+
+  @ApiProperty({ example: '2026-10-01' })
+  @IsNotEmpty()
+  start_date!: string;
+
+  @ApiProperty({ example: '2026-12-01' })
+  @IsNotEmpty()
+  end_date!: string;
 }
