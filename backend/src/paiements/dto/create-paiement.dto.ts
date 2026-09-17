@@ -1,22 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, MaxLength } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 
 export class CreatePaiementDto {
-    @ApiProperty({ description: 'The ID of the student', example: 1 })
+    @ApiProperty({ description: "ID de l'inscription", example: 1 })
     @IsNotEmpty()
-    id_student!: number;
+    @IsInt()
+    enrollment_id!: number;
 
-    @ApiProperty({ description: 'The ID of the session', example: 1 })
+    @ApiProperty({ description: 'Montant du paiement', example: 100.0 })
     @IsNotEmpty()
-    id_session!: number;
-
-    @ApiProperty({ description: 'The amount of the payment', example: 100.00 })
-    @IsNotEmpty()
+    @IsNumber()
     amount!: number;
 
-    @ApiProperty({ description: 'The method of the payment', example: 'Cash' })
+    @ApiProperty({ description: 'Méthode de paiement', example: 'Espèce' })
     @IsNotEmpty()
     @IsString()
     @MaxLength(255)
-    method!: string;
+    payment_method!: string;
 }

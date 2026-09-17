@@ -1,19 +1,25 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-@Entity()
 
+@Entity('payments')
 export class Paiement {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn({ name: 'payment_id' })
+  payment_id!: number;
 
-    @Column()
-    id_student!: number;
+  @Column()
+  enrollment_id!: number;
 
-    @Column()
-    id_session!: number;
+  @Column({ type: 'numeric', nullable: true })
+  amount!: number;
 
-    @Column('decimal', { precision: 10, scale: 2 })
-    amount!: number;
+  @Column({ nullable: true })
+  payment_method!: string;
 
-    @Column()
-    method!: string;
+  @Column({ type: 'date', nullable: true })
+  payment_date!: Date;
+
+  @Column({ nullable: true })
+  payment_status!: string;
+
+  @Column({ nullable: true })
+  invoice_number!: string;
 }
