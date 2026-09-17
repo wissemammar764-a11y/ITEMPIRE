@@ -1,15 +1,16 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-@Entity()
 
+@Entity('attendance')
 export class Presence {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn({ name: 'attendance_id' })
+  attendance_id!: number;
 
-    @Column()
-    id_student!: number;
-    @Column()
-    id_session!: number
-    @Column()
-    status!: string;
-    
+  @Column()
+  enrollment_id!: number;
+
+  @Column({ type: 'date', nullable: true })
+  attendance_date!: Date;
+
+  @Column({ nullable: true })
+  status!: string;
 }
